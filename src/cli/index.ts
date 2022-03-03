@@ -1,8 +1,10 @@
 import figlet from "figlet";
 import clear from "clear";
 import inquirer from "inquirer";
-import { CallQuestion, ParamQuestions } from "../questions";
+import { CallQuestion, ParamQuestions, MainQuestion, MainChoices } from "../questions";
+import { Desciptions } from "../client";
 import Utils from "../utils";
+import { exit } from "process";
 
 const YOU_SELECTED = "You selected ";
 const { logBlue, logGreen, logYellow } = Utils;
@@ -14,6 +16,19 @@ export function Welcome() {
   logBlue(figlet.textSync("Chaos Labs"));
 }
 
+export async function MainSelector(): Promise<void> {
+  const inquiry = MainQuestion();
+  const answered = await prompt(inquiry);
+  const choice = answered[inquiry[0].name];
+  switch (choice) {
+    case MainChoices.Call:
+      return;
+    case MainChoices.Desciptions:
+      console.log(Desciptions());
+    case MainChoices.Quit:
+      exit(0);
+  }
+}
 export async function selectCall(): Promise<string> {
   const inquiry = CallQuestion();
   const answered = await prompt(inquiry);

@@ -8,6 +8,24 @@ interface Inquiry {
   default: any[];
 }
 
+export enum MainChoices {
+  Call = "Call methods",
+  Desciptions = "See method descriptions",
+  Quit = "Quit",
+}
+
+export function MainQuestion(): Inquiry[] {
+  return [
+    {
+      type: "rawlist",
+      name: "Main",
+      message: "Select Option",
+      choices: Object.values(MainChoices),
+      default: [MainChoices.Call],
+    },
+  ];
+}
+
 export function CallQuestion(): Inquiry[] {
   return [
     {

@@ -8,7 +8,7 @@ const PubicClient: DydxClient = new DydxClient(HTTP_HOST, {
 });
 
 export const PublicCallers: CallersMapping = {
-  markets: {
+  GetMarkets: {
     params: {
       market: Object.values(Market),
     },
@@ -16,6 +16,16 @@ export const PublicCallers: CallersMapping = {
     func: async (values: any[]) => {
       const markets = await PubicClient.public.getMarkets(values[0]);
       return markets.markets;
+    },
+  },
+  GetOrderbook: {
+    params: {
+      market: Object.values(Market),
+    },
+    description: "Returns bids and asks which are each Orderbook order arrays (price and size)",
+    func: async (values: any[]) => {
+      const res = await PubicClient.public.getOrderBook(values[0]);
+      return res;
     },
   },
 };
