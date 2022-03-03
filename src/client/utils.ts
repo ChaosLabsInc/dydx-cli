@@ -7,7 +7,7 @@ export interface Caller {
 }
 
 export interface Params {
-  [name: string]: string[] | undefined;
+  [name: string]: any[] | undefined;
 }
 
 export interface CallersMapping {

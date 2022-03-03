@@ -42,7 +42,7 @@ export function ParamQuestions(call: string): Inquiry[][] {
   const inquiries = [];
   for (const param of ParamsKeys(call)) {
     const options = ParamsKeyOptions(call, param);
-    if (options !== undefined) {
+    if (options !== undefined && options.length > 0) {
       inquiries.push([
         {
           type: "rawlist",
