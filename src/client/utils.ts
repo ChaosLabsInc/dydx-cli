@@ -1,10 +1,13 @@
 import { PublicCallers } from "./public";
 import { DydxClient } from "@dydxprotocol/v3-client";
+import Web3 from "web3";
 
+const web3 = new Web3();
 const HTTP_HOST = "https://api.dydx.exchange";
 
 export const Client: DydxClient = new DydxClient(HTTP_HOST, {
   apiTimeout: 15000,
+  web3,
 });
 
 export enum ParamType {

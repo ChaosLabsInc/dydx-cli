@@ -1,18 +1,14 @@
-import { ApiKeyCredentials, DydxClient } from "@dydxprotocol/v3-client";
-import Web3 from "web3";
-
-const HTTP_HOST = "https://api.dydx.exchange";
+import { ApiKeyCredentials } from "@dydxprotocol/v3-client";
+import { Client } from ".";
 
 //Auth - require ETHEREUM_PRIVATE_KEY in the env variable.
 export async function Auth(address: string): Promise<ApiKeyCredentials> {
-  const web3 = new Web3();
   const ethKey = process.env.ETHEREUM_PRIVATE_KEY;
   if (ethKey === undefined) {
     throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key> or through CLI");
   }
-  web3.eth.accounts.wallet.add(ethKey);
-  const client = new DydxClient(HTTP_HOST, { web3 });
-  const credentials = await client.onboarding.recoverDefaultApiCredentials(address);
+  Client.web3?.eth.accounts.wallet.add(ethKey);
+  const credentials = await Client.onboarding.recoverDefaultApiCredentials(address);
   return credentials;
 }
 
