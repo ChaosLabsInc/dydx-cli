@@ -1,4 +1,11 @@
 import { PublicCallers } from "./public";
+import { DydxClient } from "@dydxprotocol/v3-client";
+
+const HTTP_HOST = "https://api.dydx.exchange";
+
+export const Client: DydxClient = new DydxClient(HTTP_HOST, {
+  apiTimeout: 15000,
+});
 
 export enum ParamType {
   number = "number",
@@ -54,6 +61,3 @@ export function ParamFromKey(call: string, key: string): Param {
   }
   throw new Error("invalid call and param key.");
 }
-
-// console.log(ParamsKeys(Calls()[0]));
-// console.log(ParamsKeyOptions("markets", "market"));

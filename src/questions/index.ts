@@ -103,14 +103,3 @@ export function ParamQuestions(call: string): Inquiry[][] {
   }
   return inquiries;
 }
-
-// getPriceChangeQuestion: function getPriceChangeQuestion() {
-//   return [
-//     {
-//       type: "number",
-//       name: QUESTION_PROMPT_NAMES.MOCK_PRICE_VALUE,
-//       message: "Select the new price",
-//       default: [0],
-//     },
-//   ];
-// },
