@@ -43,9 +43,13 @@ export function ParamQuestions(call: string): Inquiry[][] {
   for (const param of ParamsKeys(call)) {
     const { options, type, description, optional } = ParamFromKey(call, param);
     let message = "";
+    const optionalM = optional ? "[Optional] " : "";
+    const paramM = `${optionalM}${param}`;
     switch (type) {
       case ParamType.choice:
-        message = description ? `Select param value for ${param} - ${description}` : `Select param value for ${param}.`;
+        message = description
+          ? `Select param value for ${paramM} - ${description}`
+          : `Select param value for ${paramM}.`;
         inquiries.push([
           {
             type: "rawlist",
@@ -57,35 +61,39 @@ export function ParamQuestions(call: string): Inquiry[][] {
         ]);
         break;
       case ParamType.number:
-        message = description ? `Insert param value for ${param} - ${description}` : `Insert param value for ${param}.`;
+        message = description
+          ? `Insert param value for ${paramM} - ${description}`
+          : `Insert param value for ${paramM}.`;
         inquiries.push([
           {
             type: "number",
             name: param,
             message: message,
-            default: 0,
+            default: optional ? -1 : 0,
           },
         ]);
         break;
       case ParamType.string:
-        message = description ? `Insert param value for ${param} - ${description}` : `Insert param value for ${param}.`;
+        message = description
+          ? `Insert param value for ${paramM} - ${description}`
+          : `Insert param value for ${paramM}.`;
         inquiries.push([
           {
             type: "string",
             name: param,
             message: message,
-            default: "",
+            default: optional ? undefined : "",
           },
         ]);
         break;
       case ParamType.time:
-        message = `Insert param value for ${param} in ISO format (2022-01-13T18:46:01) or leave empty for current time.`;
+        message = `Insert param value for ${paramM} in ISO format (2022-01-13T18:46:01) or leave empty for current time.`;
         inquiries.push([
           {
             type: "string",
             name: param,
             message: message,
-            default: "",
+            default: optional ? undefined : "",
           },
         ]);
         break;

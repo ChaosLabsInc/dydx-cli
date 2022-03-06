@@ -45,7 +45,7 @@ export function ParamsKeys(call: string): string[] {
 }
 
 export function OptinalValue(v: any): any {
-  return v !== undefined && v !== "" ? v : undefined;
+  return v !== undefined && v !== "" && v !== -1 ? v : undefined;
 }
 
 export function ParamFromKey(call: string, key: string): Param {
