@@ -6,7 +6,7 @@ import {
   LeaderboardPnlSortBy,
   NftRevealType,
 } from "@dydxprotocol/v3-client";
-import { CallersMapping, Params } from "./utils";
+import { CallersMapping, ParamType, OptinalValue } from "./utils";
 
 const HTTP_HOST = "https://api.dydx.exchange";
 
@@ -17,7 +17,11 @@ const PubicClient: DydxClient = new DydxClient(HTTP_HOST, {
 export const PublicCallers: CallersMapping = {
   GetMarkets: {
     params: {
-      market: Object.values(Market),
+      market: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(Market),
+      },
     },
     description: "Get one or all markets as well as metadata about each retrieved market.",
     func: async (values: any[]) => {
@@ -27,7 +31,11 @@ export const PublicCallers: CallersMapping = {
   },
   GetOrderbook: {
     params: {
-      market: Object.values(Market),
+      market: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(Market),
+      },
     },
     description: "Returns bids and asks which are each Orderbook order arrays (price and size)",
     func: async (values: any[]) => {
@@ -37,7 +45,11 @@ export const PublicCallers: CallersMapping = {
   },
   GetTrades: {
     params: {
-      market: Object.values(Market),
+      market: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(Market),
+      },
     },
     description: "Get Trades, up to 100 records",
     func: async (values: any[]) => {
@@ -55,8 +67,16 @@ export const PublicCallers: CallersMapping = {
   },
   GetMarketStats: {
     params: {
-      market: Object.values(Market),
-      days: [1, 7, 30],
+      market: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(Market),
+      },
+      days: {
+        type: ParamType.choice,
+        optional: false,
+        options: [1, 7, 30],
+      },
     },
     description: "Get an individual market's statistics over a set period of time or all available periods of time.",
     func: async (values: any[]) => {
@@ -66,23 +86,53 @@ export const PublicCallers: CallersMapping = {
   },
   GetHistoricalFunding: {
     params: {
-      market: Object.values(Market),
+      market: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(Market),
+      },
+      effectiveBeforeOrAt: {
+        type: ParamType.time,
+        optional: true,
+        options: undefined,
+        description: "ISO formatted time. empty string for default",
+      },
     },
     description: "Get the historical funding rates for a market.",
     func: async (values: any[]) => {
-      const res = await PubicClient.public.getHistoricalFunding({ market: values[0] });
+      const res = await PubicClient.public.getHistoricalFunding({
+        market: values[0],
+        effectiveBeforeOrAt: OptinalValue(values[1]),
+      });
       return res;
     },
   },
   CandlesforMarket: {
     params: {
-      market: Object.values(Market),
-      resolution: Object.values(CandleResolution),
-      limit: Array.from(Array(100).keys()),
+      market: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(Market),
+      },
+      resolution: {
+        type: ParamType.choice,
+        optional: true,
+        options: Object.values(CandleResolution),
+      },
+      limit: {
+        type: ParamType.number,
+        optional: true,
+        options: undefined,
+        description: "Up to 100.",
+      },
     },
     description: "Get the candle statistics for a market.",
     func: async (values: any[]) => {
-      const res = await PubicClient.public.getCandles({ market: values[0], resolution: values[1], limit: values[2] });
+      const res = await PubicClient.public.getCandles({
+        market: values[0],
+        resolution: OptinalValue(values[1]),
+        limit: OptinalValue(values[2]),
+      });
       return res;
     },
   },
@@ -96,7 +146,11 @@ export const PublicCallers: CallersMapping = {
   },
   CheckIfUserExistsByAddress: {
     params: {
-      userAddress: undefined,
+      userAddress: {
+        type: ParamType.string,
+        optional: false,
+        options: undefined,
+      },
     },
     description: "Check if a user exists for a given Ethereum address.",
     func: async (values: any[]) => {
@@ -106,7 +160,11 @@ export const PublicCallers: CallersMapping = {
   },
   CheckIfUserExistsByName: {
     params: {
-      userName: undefined,
+      userName: {
+        type: ParamType.string,
+        optional: false,
+        options: undefined,
+      },
     },
     description: "Check if a username has been taken by a user.",
     func: async (values: any[]) => {
@@ -124,23 +182,47 @@ export const PublicCallers: CallersMapping = {
   },
   GetLeaderboardPNLs: {
     params: {
-      period: Object.values(LeaderboardPnlPeriod),
-      sortBy: Object.values(LeaderboardPnlSortBy),
-      limit: Array.from(Array(100).keys()),
+      period: {
+        type: ParamType.choice,
+        optional: false,
+        options: Object.values(LeaderboardPnlPeriod),
+      },
+      sortBy: {
+        type: ParamType.choice,
+        optional: true,
+        options: Object.values(LeaderboardPnlSortBy),
+      },
+      startingBeforeOrAt: {
+        type: ParamType.time,
+        optional: true,
+        options: undefined,
+        description: "ISO formatted time. empty string for default",
+      },
+      limit: {
+        type: ParamType.number,
+        optional: true,
+        options: undefined,
+        description: "Up to 100.",
+      },
     },
     description: "Get the top PNLs for a specified period and how they rank against each other.",
     func: async (values: any[]) => {
       const res = await PubicClient.public.getLeaderboardPnls({
         period: values[0],
-        sortBy: values[1],
-        limit: values[2],
+        sortBy: OptinalValue(values[1]),
+        startingBeforeOrAt: OptinalValue(values[2]),
+        limit: OptinalValue(values[3]),
       });
       return res;
     },
   },
   GetPublicRetroactiveMiningRewards: {
     params: {
-      address: undefined,
+      address: {
+        type: ParamType.string,
+        optional: false,
+        options: undefined,
+      },
     },
     description: "Get the retroactive mining rewards for an ethereum address.",
     func: async (values: any[]) => {
@@ -150,7 +232,11 @@ export const PublicCallers: CallersMapping = {
   },
   VerifyanEmailAddress: {
     params: {
-      token: undefined,
+      token: {
+        type: ParamType.string,
+        optional: false,
+        options: undefined,
+      },
     },
     description: "Verify an email address by providing the verification token sent to the email address.",
     func: async (values: any[]) => {
@@ -168,7 +254,11 @@ export const PublicCallers: CallersMapping = {
   },
   GetHistoricallyRevealedHedgies: {
     params: {
-      NFTRevealType: ["daily", "weekly"], //Object.values(NftRevealType),
+      NFTRevealType: {
+        type: ParamType.choice,
+        optional: false,
+        options: ["daily", "weekly"], //Object.values(NftRevealType),
+      },
     },
     description: "Get the historically revealed Hedgies from competition distributions.",
     func: async (values: any[]) => {

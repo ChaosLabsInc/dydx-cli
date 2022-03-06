@@ -1,5 +1,12 @@
 import { PublicCallers } from "./public";
 
+export enum ParamType {
+  number = "number",
+  time = "time", //iso - 2022-01-13T18:46:01
+  string = "string",
+  choice = "choice",
+}
+
 export interface Caller {
   params: Params;
   description: string;
@@ -7,7 +14,14 @@ export interface Caller {
 }
 
 export interface Params {
-  [name: string]: any[] | undefined;
+  [name: string]: Param;
+}
+
+export interface Param {
+  type: ParamType;
+  optional: boolean;
+  options: any[] | undefined;
+  description?: string;
 }
 
 export interface CallersMapping {
@@ -30,11 +44,15 @@ export function ParamsKeys(call: string): string[] {
   return PublicCallers[call] ? Object.keys(PublicCallers[call].params) : [];
 }
 
-export function ParamsKeyOptions(call: string, key: string): string[] | undefined {
+export function OptinalValue(v: any): any {
+  return v !== undefined && v !== "" ? v : undefined;
+}
+
+export function ParamFromKey(call: string, key: string): Param {
   if (PublicCallers[call] && PublicCallers[call].params[key]) {
     return PublicCallers[call].params[key];
   }
-  return [];
+  throw new Error("invalid call and param key.");
 }
 
 // console.log(ParamsKeys(Calls()[0]));

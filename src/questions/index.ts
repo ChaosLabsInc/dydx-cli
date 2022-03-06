@@ -1,11 +1,11 @@
-import { Calls, ParamsKeys, ParamsKeyOptions } from "../client";
+import { Calls, ParamsKeys, ParamFromKey, ParamType } from "../client";
 
 interface Inquiry {
   type: string;
   name: string;
   message: string;
   choices?: string[];
-  default: any[];
+  default: any;
 }
 
 export enum MainChoices {
@@ -41,26 +41,56 @@ export function CallQuestion(): Inquiry[] {
 export function ParamQuestions(call: string): Inquiry[][] {
   const inquiries = [];
   for (const param of ParamsKeys(call)) {
-    const options = ParamsKeyOptions(call, param);
-    if (options !== undefined && options.length > 0) {
-      inquiries.push([
-        {
-          type: "rawlist",
-          name: param,
-          message: `Select param value for ${param}`,
-          choices: options,
-          default: [],
-        },
-      ]);
-    } else {
-      inquiries.push([
-        {
-          type: "string",
-          name: param,
-          message: `Insert param value for ${param}`,
-          default: [""],
-        },
-      ]);
+    const { options, type, description, optional } = ParamFromKey(call, param);
+    let message = "";
+    switch (type) {
+      case ParamType.choice:
+        message = description ? `Select param value for ${param} - ${description}` : `Select param value for ${param}.`;
+        inquiries.push([
+          {
+            type: "rawlist",
+            name: param,
+            message: message,
+            choices: options,
+            default: [],
+          },
+        ]);
+        break;
+      case ParamType.number:
+        message = description ? `Insert param value for ${param} - ${description}` : `Insert param value for ${param}.`;
+        inquiries.push([
+          {
+            type: "number",
+            name: param,
+            message: message,
+            default: 0,
+          },
+        ]);
+        break;
+      case ParamType.string:
+        message = description ? `Insert param value for ${param} - ${description}` : `Insert param value for ${param}.`;
+        inquiries.push([
+          {
+            type: "string",
+            name: param,
+            message: message,
+            default: "",
+          },
+        ]);
+        break;
+      case ParamType.time:
+        message = `Insert param value for ${param} in ISO format (2022-01-13T18:46:01) or leave empty for current time.`;
+        inquiries.push([
+          {
+            type: "string",
+            name: param,
+            message: message,
+            default: "",
+          },
+        ]);
+        break;
+      default:
+        throw new Error("Param type invalid");
     }
   }
   return inquiries;

@@ -1,7 +1,7 @@
 {
   "name": "dydx-cli",
   "scripts": {
-    "start": "ts-node --files index.ts",
+    "start": "npx ts-node --files index.ts",
     "test": "jest --verbose",
     "build": "npx tsc -b"
   },
