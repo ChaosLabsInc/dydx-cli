@@ -1,13 +1,22 @@
 import figlet from "figlet";
 import clear from "clear";
 import inquirer from "inquirer";
-import { CallQuestion, ParamQuestions, MainQuestion, MainChoices } from "../questions";
-import { Desciptions } from "../client";
-import Utils from "../utils";
+import {
+  CallQuestion,
+  ParamQuestions,
+  MainQuestion,
+  MainChoices,
+  AuthMainQuestion,
+  AuthChoices,
+  AreYouSureQuestion,
+  AddressQuestion,
+  PrivateKeyQuestion,
+} from "../questions/";
+import { Desciptions, ResetAuth, isPrivateKeyInEnv, AuthOrLogin, configAddress } from "../client";
+import { logBlue, logGreen, logYellow } from "../utils";
 import { exit } from "process";
 
 const YOU_SELECTED = "You selected ";
-const { logBlue, logGreen, logYellow } = Utils;
 const { prompt } = inquirer;
 
 export function Welcome() {
@@ -23,12 +32,64 @@ export async function MainSelector(): Promise<void> {
   switch (choice) {
     case MainChoices.Call:
       return;
+    case MainChoices.Auth:
+      return Authelector();
     case MainChoices.Desciptions:
       console.log(Desciptions());
+      return MainSelector();
     case MainChoices.Quit:
       exit(0);
   }
 }
+
+export async function Authelector(): Promise<void> {
+  const inquiry = AuthMainQuestion();
+  const answered = await prompt(inquiry);
+  const choice = answered[inquiry[0].name];
+  switch (choice) {
+    case AuthChoices.Login:
+      await LoginSelector();
+      break;
+    case AuthChoices.Reset:
+      await ResetAuthSelector();
+      break;
+    case AuthChoices.Back:
+      return MainSelector();
+  }
+}
+
+export async function LoginSelector(): Promise<void> {
+  let address = configAddress();
+  if (address === "") {
+    const inquiry = AddressQuestion();
+    const answered = await prompt(inquiry);
+    address = answered[inquiry[0].name];
+  }
+  logBlue(YOU_SELECTED + address);
+  let key = "";
+  if (!isPrivateKeyInEnv()) {
+    const keyInquiry = PrivateKeyQuestion();
+    const answered2 = await prompt(keyInquiry);
+    key = answered2[keyInquiry[0].name];
+    if ((key = "")) {
+      logBlue("Expected private key in env (ETHEREUM_PRIVATE_KEY). Try again.");
+      exit(0);
+    }
+  }
+  await AuthOrLogin(address, key);
+  logBlue("Logged in successfully.");
+  return MainSelector();
+}
+
+export async function ResetAuthSelector(): Promise<void> {
+  const inquiry = AreYouSureQuestion();
+  const answered = await prompt(inquiry);
+  const choice = answered[inquiry[0].name];
+  logBlue(YOU_SELECTED + choice);
+  ResetAuth();
+  return MainSelector();
+}
+
 export async function selectCall(): Promise<string> {
   const inquiry = CallQuestion();
   const answered = await prompt(inquiry);

@@ -1,29 +1,62 @@
 import { ApiKeyCredentials } from "@dydxprotocol/v3-client";
-import { Client } from ".";
+import { readConfig, writeConfig, Config } from "../utils";
+import { Client } from "./utils";
 
-//Auth - require ETHEREUM_PRIVATE_KEY in the env variable.
-export async function Auth(address: string): Promise<ApiKeyCredentials> {
+export function isAuthed(conf?: Config): boolean {
+  conf = conf ?? readConfig();
+  if (conf.apiCredentials !== undefined && conf.apiCredentials.key !== "" && conf.apiCredentials.key !== undefined) {
+    return true;
+  }
+  return false;
+}
+
+export function configAddress(): string {
+  const conf = readConfig();
+  return conf.EthAddress;
+}
+
+export function isPrivateKeyInEnv(): boolean {
   const ethKey = process.env.ETHEREUM_PRIVATE_KEY;
   if (ethKey === undefined) {
-    throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key> or through CLI");
+    return false;
   }
-  Client.web3?.eth.accounts.wallet.add(ethKey);
+  return true;
+}
+
+export async function AuthOrLogin(address?: string, inputPrivateKey?: string): Promise<void> {
+  const conf = readConfig();
+  if (!address && !conf.EthAddress) {
+    throw new Error("Eth Address not provided.");
+  }
+  if (address !== conf.EthAddress && address) {
+    conf.EthAddress = address;
+    writeConfig(conf);
+  }
+  if (!isAuthed(conf)) {
+    const credentials = await Auth(conf.EthAddress, inputPrivateKey);
+    conf.apiCredentials = credentials;
+    writeConfig(conf);
+  }
+  Client.apiKeyCredentials = conf.apiCredentials;
+  return;
+}
+
+//Auth - require ETHEREUM_PRIVATE_KEY in the env variable.
+async function Auth(address: string, inputPrivateKey?: string): Promise<ApiKeyCredentials> {
+  let ethKey = inputPrivateKey;
+  if (!ethKey) {
+    ethKey = process.env.ETHEREUM_PRIVATE_KEY;
+    if (ethKey === undefined) {
+      throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key> or through CLI");
+    }
+  }
+  Client.web3?.eth.accounts.wallet.add(ethKey as string);
   const credentials = await Client.onboarding.recoverDefaultApiCredentials(address);
   return credentials;
 }
 
-Auth("0x866505a747D958b21E56D516DA61f13949949C2d")
-  .then((credentials) => {
-    console.log(credentials);
-  })
-  .catch((e) => {
-    console.log("err", e);
+export function ResetAuth(): void {
+  writeConfig({
+    EthAddress: "",
   });
-
-/*
-  {
-  secret: 'SaktbF1vJPfzeig8QKwd6ZJQmSC131pKb0d5IOsZ',
-  key: '30959bcd-996e-125e-f581-3af95c90f3a6',
-  passphrase: 'VxIG4Iyl8sjAeQ5Vzgz1'
 }
-*/
