@@ -1,21 +1,10 @@
 import { PublicCallers } from "./public";
 import { PrivateCallers } from "./private";
-import { DydxClient } from "@dydxprotocol/v3-client";
-import Web3 from "web3";
 import { CallersMapping, CallType, Param } from "./types";
 import { AuthOrLogin } from "./auth";
+import { ClientSingleton } from "./client";
 
-// import detectEthereumProvider from "@metamask/detect-provider";
-
-// const provider = await detectEthereumProvider();
-
-const web3 = new Web3(Web3.givenProvider);
-const HTTP_HOST = "https://api.dydx.exchange";
-
-export const Client: DydxClient = new DydxClient(HTTP_HOST, {
-  apiTimeout: 15000,
-  web3,
-});
+export const Client = new ClientSingleton();
 
 function Caller(type: CallType): CallersMapping {
   switch (type) {

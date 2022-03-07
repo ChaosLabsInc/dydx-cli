@@ -37,7 +37,7 @@ export async function AuthOrLogin(address?: string, inputPrivateKey?: string): P
     conf.apiCredentials = credentials;
     writeConfig(conf);
   }
-  Client.apiKeyCredentials = conf.apiCredentials;
+  Client.client.apiKeyCredentials = conf.apiCredentials;
   return;
 }
 
@@ -50,8 +50,8 @@ async function Auth(address: string, inputPrivateKey?: string): Promise<ApiKeyCr
       throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key> or through CLI");
     }
   }
-  Client.web3?.eth.accounts.wallet.add(ethKey as string);
-  const credentials = await Client.onboarding.recoverDefaultApiCredentials(address);
+  Client.client.web3?.eth.accounts.wallet.add(ethKey as string);
+  const credentials = await Client.client.onboarding.recoverDefaultApiCredentials(address);
   return credentials;
 }
 

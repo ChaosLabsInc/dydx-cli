@@ -13,7 +13,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get one or all markets as well as metadata about each retrieved market.",
     func: async (values: any[]) => {
-      const markets = await Client.public.getMarkets(values[0]);
+      const markets = await Client.client.public.getMarkets(values[0]);
       return markets.markets;
     },
   },
@@ -27,7 +27,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Returns bids and asks which are each Orderbook order arrays (price and size)",
     func: async (values: any[]) => {
-      const res = await Client.public.getOrderBook(values[0]);
+      const res = await Client.client.public.getOrderBook(values[0]);
       return res;
     },
   },
@@ -41,7 +41,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get Trades, up to 100 records",
     func: async (values: any[]) => {
-      const res = await Client.public.getTrades({ market: values[0] });
+      const res = await Client.client.public.getTrades({ market: values[0] });
       return res;
     },
   },
@@ -49,7 +49,7 @@ export const PublicCallers: CallersMapping = {
     params: {},
     description: "Returns a map of all LP provider accounts that have available funds for fast withdrawals",
     func: async (values: any[]) => {
-      const res = await Client.public.getFastWithdrawals({});
+      const res = await Client.client.public.getFastWithdrawals({});
       return res;
     },
   },
@@ -68,7 +68,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get an individual market's statistics over a set period of time or all available periods of time.",
     func: async (values: any[]) => {
-      const res = await Client.public.getStats({ market: values[0], days: values[1] });
+      const res = await Client.client.public.getStats({ market: values[0], days: values[1] });
       return res;
     },
   },
@@ -88,7 +88,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get the historical funding rates for a market.",
     func: async (values: any[]) => {
-      const res = await Client.public.getHistoricalFunding({
+      const res = await Client.client.public.getHistoricalFunding({
         market: values[0],
         effectiveBeforeOrAt: OptinalValue(values[1]),
       });
@@ -116,7 +116,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get the candle statistics for a market.",
     func: async (values: any[]) => {
-      const res = await Client.public.getCandles({
+      const res = await Client.client.public.getCandles({
         market: values[0],
         resolution: OptinalValue(values[1]),
         limit: OptinalValue(values[2]),
@@ -128,7 +128,7 @@ export const PublicCallers: CallersMapping = {
     params: {},
     description: "Get the candle statistics for a market.",
     func: async (values: any[]) => {
-      const res = await Client.public.getConfig();
+      const res = await Client.client.public.getConfig();
       return res;
     },
   },
@@ -142,7 +142,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Check if a user exists for a given Ethereum address.",
     func: async (values: any[]) => {
-      const res = await Client.public.doesUserExistWithAddress(values[0]);
+      const res = await Client.client.public.doesUserExistWithAddress(values[0]);
       return res;
     },
   },
@@ -156,7 +156,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Check if a username has been taken by a user.",
     func: async (values: any[]) => {
-      const res = await Client.public.doesUserExistWithUsername(values[0]);
+      const res = await Client.client.public.doesUserExistWithUsername(values[0]);
       return res;
     },
   },
@@ -164,7 +164,7 @@ export const PublicCallers: CallersMapping = {
     params: {},
     description: "Get the current time of the API server.",
     func: async (values: any[]) => {
-      const res = await Client.public.getTime();
+      const res = await Client.client.public.getTime();
       return res;
     },
   },
@@ -195,7 +195,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get the top PNLs for a specified period and how they rank against each other.",
     func: async (values: any[]) => {
-      const res = await Client.public.getLeaderboardPnls({
+      const res = await Client.client.public.getLeaderboardPnls({
         period: values[0],
         sortBy: OptinalValue(values[1]),
         startingBeforeOrAt: OptinalValue(values[2]),
@@ -214,7 +214,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get the retroactive mining rewards for an ethereum address.",
     func: async (values: any[]) => {
-      const res = await Client.public.getPublicRetroactiveMiningRewards(values[0]);
+      const res = await Client.client.public.getPublicRetroactiveMiningRewards(values[0]);
       return res;
     },
   },
@@ -228,7 +228,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Verify an email address by providing the verification token sent to the email address.",
     func: async (values: any[]) => {
-      const res = await Client.public.verifyEmail(values[0]);
+      const res = await Client.client.public.verifyEmail(values[0]);
       return res;
     },
   },
@@ -236,7 +236,7 @@ export const PublicCallers: CallersMapping = {
     params: {},
     description: "Get the currently revealed Hedgies for competition distribution.",
     func: async (values: any[]) => {
-      const res = await Client.public.getCurrentlyRevealedHedgies();
+      const res = await Client.client.public.getCurrentlyRevealedHedgies();
       return res;
     },
   },
@@ -250,7 +250,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get the historically revealed Hedgies from competition distributions.",
     func: async (values: any[]) => {
-      const res = await Client.public.getHistoricallyRevealedHedgies({
+      const res = await Client.client.public.getHistoricallyRevealedHedgies({
         nftRevealType: values[0],
       });
       return res;

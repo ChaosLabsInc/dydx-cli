@@ -9,7 +9,7 @@ export const EthPrivateCallers: CallersMapping = {
     params: {},
     description: "Create new API key credentials for a user.",
     func: async (values: any[]) => {
-      const res = await Client.ethPrivate.createApiKey(configAddress());
+      const res = await Client.client.ethPrivate.createApiKey(configAddress());
       return res;
     },
   },
@@ -31,7 +31,7 @@ export const PrivateCallers: CallersMapping = {
     },
     description: "This is used by the frontend app to derive the STARK key pair in a way that is recoverable",
     func: async (values: any[]) => {
-      const res = await Client.onboarding.createUser(
+      const res = await Client.client.onboarding.createUser(
         {
           starkKey: values[0],
           starkKeyYCoordinate: values[1],
@@ -45,7 +45,7 @@ export const PrivateCallers: CallersMapping = {
     params: {},
     description: "This is used by the frontend app to derive the STARK key pair in a way that is recoverable",
     func: async (values: any[]) => {
-      const res = await Client.onboarding.deriveStarkKey(configAddress());
+      const res = await Client.client.onboarding.deriveStarkKey(configAddress());
       return res;
     },
   },
@@ -54,7 +54,7 @@ export const PrivateCallers: CallersMapping = {
     description:
       "Gets the dYdX provided Ethereum signature required to send a registration transaction to the Starkware smart contract.",
     func: async (values: any[]) => {
-      const res = await Client.private.getRegistration();
+      const res = await Client.client.private.getRegistration();
       return res;
     },
   },
@@ -62,7 +62,7 @@ export const PrivateCallers: CallersMapping = {
     params: {},
     description: "return the user and user information.",
     func: async (values: any[]) => {
-      const res = await Client.private.getUser();
+      const res = await Client.client.private.getUser();
       return res;
     },
   },
