@@ -8,3 +8,4 @@ artifacts
 
 /build/
 /build/*
+/config/config.json
