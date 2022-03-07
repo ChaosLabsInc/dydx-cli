@@ -1,22 +1,22 @@
-import { Calls, ParamsKeys, ParamFromKey, ParamType } from "../client";
+import { Calls, ParamsKeys, ParamFromKey, ParamType, CallType } from "../client";
 import { Inquiry } from "./types";
 
-export function CallQuestion(): Inquiry[] {
+export function CallQuestion(type: CallType): Inquiry[] {
   return [
     {
       type: "rawlist",
       name: "Calls",
       message: "Select DyDx call",
-      choices: Calls(),
+      choices: Calls(type),
       default: [],
     },
   ];
 }
 
-export function ParamQuestions(call: string): Inquiry[][] {
+export function ParamQuestions(call: string, callType: CallType): Inquiry[][] {
   const inquiries = [];
-  for (const param of ParamsKeys(call)) {
-    const { options, type, description, optional } = ParamFromKey(call, param);
+  for (const param of ParamsKeys(call, callType)) {
+    const { options, type, description, optional } = ParamFromKey(call, param, callType);
     let message = "";
     const optionalM = optional ? "[Optional] " : "";
     const paramM = `${optionalM}${param}`;

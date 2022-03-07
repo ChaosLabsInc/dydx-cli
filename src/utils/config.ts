@@ -10,9 +10,18 @@ export interface Config {
   apiCredentials?: ApiKeyCredentials;
 }
 
+export const EmptyConfig: Config = {
+  EthAddress: "",
+};
+
 export function readConfig(): Config {
-  const rawData = fs.readFileSync(resolve(__dirname, path));
-  return JSON.parse(rawData.toString());
+  try {
+    const rawData = fs.readFileSync(resolve(__dirname, path));
+    return JSON.parse(rawData.toString());
+  } catch (e) {
+    writeConfig(EmptyConfig);
+    return EmptyConfig;
+  }
 }
 
 export function writeConfig(confing: Config): void {

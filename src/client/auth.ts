@@ -1,5 +1,5 @@
 import { ApiKeyCredentials } from "@dydxprotocol/v3-client";
-import { readConfig, writeConfig, Config } from "../utils";
+import { readConfig, writeConfig, Config, EmptyConfig } from "../utils";
 import { Client } from "./utils";
 
 export function isAuthed(conf?: Config): boolean {
@@ -56,7 +56,5 @@ async function Auth(address: string, inputPrivateKey?: string): Promise<ApiKeyCr
 }
 
 export function ResetAuth(): void {
-  writeConfig({
-    EthAddress: "",
-  });
+  writeConfig(EmptyConfig);
 }

@@ -1,5 +1,6 @@
 import { Market, CandleResolution, LeaderboardPnlPeriod, LeaderboardPnlSortBy } from "@dydxprotocol/v3-client";
-import { CallersMapping, ParamType, OptinalValue, Client } from "./utils";
+import { CallersMapping, ParamType } from "./types";
+import { OptinalValue, Client } from "./utils";
 
 export const PublicCallers: CallersMapping = {
   GetMarkets: {
@@ -256,7 +257,3 @@ export const PublicCallers: CallersMapping = {
     },
   },
 };
-
-export async function ExecuteCall(call: string, values: any[]): Promise<any> {
-  return await PublicCallers[call].func(values);
-}

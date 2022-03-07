@@ -1,9 +1,11 @@
 import { Inquiry } from "./types";
 
 export enum MainChoices {
-  Call = "Call Methods",
+  PublicCall = "Call Public Methods",
+  PrivateCall = "Call Private Methods",
   Auth = "Authentication Options",
-  Desciptions = "See Method Descriptions",
+  PublicDesciptions = "See Public Method Descriptions",
+  PrivateDesciptions = "See Private Method Descriptions",
   Quit = "Quit",
 }
 
@@ -14,7 +16,7 @@ export function MainQuestion(): Inquiry[] {
       name: "Main",
       message: "Select Option",
       choices: Object.values(MainChoices),
-      default: [MainChoices.Call],
+      default: [MainChoices.PublicCall],
     },
   ];
 }

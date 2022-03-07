@@ -12,7 +12,16 @@ import {
   AddressQuestion,
   PrivateKeyQuestion,
 } from "../questions/";
-import { Desciptions, ResetAuth, isPrivateKeyInEnv, AuthOrLogin, configAddress } from "../client";
+import {
+  Desciptions,
+  ResetAuth,
+  isPrivateKeyInEnv,
+  AuthOrLogin,
+  configAddress,
+  isAuthed,
+  CallType,
+  ExecuteCall,
+} from "../client";
 import { logBlue, logGreen, logYellow } from "../utils";
 import { exit } from "process";
 
@@ -30,19 +39,36 @@ export async function MainSelector(): Promise<void> {
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
   switch (choice) {
-    case MainChoices.Call:
-      return;
+    case MainChoices.PublicCall:
+      return CallSelector(CallType.public);
+    case MainChoices.PrivateCall:
+      return CallSelector(CallType.private);
     case MainChoices.Auth:
-      return Authelector();
-    case MainChoices.Desciptions:
-      console.log(Desciptions());
+      return AuthSelector();
+    case MainChoices.PublicDesciptions:
+      console.log(Desciptions(CallType.public));
+      return MainSelector();
+    case MainChoices.PrivateCall:
+      console.log(Desciptions(CallType.private));
       return MainSelector();
     case MainChoices.Quit:
       exit(0);
   }
 }
 
-export async function Authelector(): Promise<void> {
+export async function CallSelector(type: CallType): Promise<void> {
+  if (type === CallType.private && !isAuthed()) {
+    logYellow(`You must authenticate first - Go to ${MainChoices.Auth}`);
+    return MainSelector();
+  }
+  const call = await selectCall(type);
+  const params = await fillParams(call, type);
+  console.log(call, params);
+  const res = await ExecuteCall(call, params, type);
+  console.log(res);
+}
+
+export async function AuthSelector(): Promise<void> {
   const inquiry = AuthMainQuestion();
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
@@ -72,7 +98,7 @@ export async function LoginSelector(): Promise<void> {
     const answered2 = await prompt(keyInquiry);
     key = answered2[keyInquiry[0].name];
     if ((key = "")) {
-      logBlue("Expected private key in env (ETHEREUM_PRIVATE_KEY). Try again.");
+      logYellow("Expected private key in env (ETHEREUM_PRIVATE_KEY). Try again.");
       exit(0);
     }
   }
@@ -90,16 +116,16 @@ export async function ResetAuthSelector(): Promise<void> {
   return MainSelector();
 }
 
-export async function selectCall(): Promise<string> {
-  const inquiry = CallQuestion();
+export async function selectCall(type: CallType): Promise<string> {
+  const inquiry = CallQuestion(type);
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
   logBlue(YOU_SELECTED + choice);
   return choice;
 }
 
-export async function fillParams(call: string): Promise<string[]> {
-  const inquiries = ParamQuestions(call);
+export async function fillParams(call: string, type: CallType): Promise<string[]> {
+  const inquiries = ParamQuestions(call, type);
   const choices = [];
   for (const inquiry of inquiries) {
     const answered = await prompt(inquiry);
@@ -109,25 +135,3 @@ export async function fillParams(call: string): Promise<string[]> {
   }
   return choices;
 }
-
-// export async function selectCall(): Promise<string> {
-//   const valueChangeSelection = await prompt(Questions.getPriceChangeQuestion());
-//   logBlue(YOU_SELECTED + valueChangeSelection[QUESTION_NAMES.MOCK_PRICE_VALUE]);
-//   return valueChangeSelection[QUESTION_NAMES.MOCK_PRICE_VALUE];
-// }
-
-// async function mock(pool: Pool, twapInteraval: number, price: number): Promise<void> {
-//   try {
-//     const mocker = new UniSwapPoolMocker(rpcURL, pool.address);
-//     const originalPrices = await mocker.prices(twapInteraval, pool.decimals.token0, pool.decimals.token1);
-//     logBlue(`Original Prices ${originalPrices}`);
-//     await mocker.MockPrice(price, twapInteraval, pool.decimals.token0, pool.decimals.token1);
-//     const mockedPrices = await mocker.prices(twapInteraval, pool.decimals.token0, pool.decimals.token1);
-//     logBlue(`New Prices ${mockedPrices}`);
-//     logBlue(`Let's get to work 💼 😏 ...`);
-//     logYellow(figlet.textSync("Celebrate"));
-//     logBlue(`You are a shadowy super code 🔥 ✨ 😏 ...`);
-//   } catch (err) {
-//     logYellow(`${err}`);
-//   }
-// }
