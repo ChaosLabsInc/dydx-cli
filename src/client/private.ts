@@ -5,6 +5,7 @@ import { configAddress } from "./auth";
 
 export const EthPrivateCallers: CallersMapping = {
   RegisterAPIKey: {
+    //https://github.com/dydxprotocol/v3-client/issues/126
     params: {},
     description: "Create new API key credentials for a user.",
     func: async (values: any[]) => {
@@ -15,11 +16,36 @@ export const EthPrivateCallers: CallersMapping = {
 };
 
 export const PrivateCallers: CallersMapping = {
-  RegisterAPIKey: {
-    params: {},
-    description: "Create new API key credentials for a user.",
+  CreateUser: {
+    params: {
+      starkKey: {
+        type: ParamType.string,
+        optional: false,
+        options: undefined,
+      },
+      starkKeyYCoordinate: {
+        type: ParamType.string,
+        optional: false,
+        options: undefined,
+      },
+    },
+    description: "This is used by the frontend app to derive the STARK key pair in a way that is recoverable",
     func: async (values: any[]) => {
-      const res = await Client.ethPrivate.createApiKey(configAddress());
+      const res = await Client.onboarding.createUser(
+        {
+          starkKey: values[0],
+          starkKeyYCoordinate: values[1],
+        },
+        configAddress()
+      );
+      return res;
+    },
+  },
+  DeriveStarkKey: {
+    params: {},
+    description: "This is used by the frontend app to derive the STARK key pair in a way that is recoverable",
+    func: async (values: any[]) => {
+      const res = await Client.onboarding.deriveStarkKey(configAddress());
       return res;
     },
   },
