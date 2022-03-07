@@ -1,10 +1,22 @@
 import { ApiKeyCredentials } from "@dydxprotocol/v3-client";
-import { readConfig, writeConfig, Config, EmptyConfig } from "../utils";
+import { readConfig, writeConfig, Config, EmptyConfig, StarkKeyPair } from "../utils";
 import { Client } from "./utils";
 
 export function isAuthed(conf?: Config): boolean {
   conf = conf ?? readConfig();
   if (conf.apiCredentials !== undefined && conf.apiCredentials.key !== "" && conf.apiCredentials.key !== undefined) {
+    return true;
+  }
+  return false;
+}
+
+export function isStarkAuthed(conf?: Config): boolean {
+  conf = conf ?? readConfig();
+  if (
+    conf.starkCredentials !== undefined &&
+    conf.starkCredentials.publicKey !== "" &&
+    conf.starkCredentials.publicKey !== undefined
+  ) {
     return true;
   }
   return false;
@@ -23,7 +35,12 @@ export function isPrivateKeyInEnv(): boolean {
   return true;
 }
 
-export async function AuthOrLogin(address?: string, inputPrivateKey?: string): Promise<void> {
+export async function MasterAuthOrLogin(): Promise<void> {
+  await APIAuthOrLogin();
+  await StarkAuthOrLogin();
+}
+
+export async function APIAuthOrLogin(address?: string, inputPrivateKey?: string): Promise<void> {
   const conf = readConfig();
   if (!address && !conf.EthAddress) {
     throw new Error("Eth Address not provided.");
@@ -38,6 +55,21 @@ export async function AuthOrLogin(address?: string, inputPrivateKey?: string): P
     writeConfig(conf);
   }
   Client.client.apiKeyCredentials = conf.apiCredentials;
+  return;
+}
+
+export async function StarkAuthOrLogin(credentials?: StarkKeyPair): Promise<void> {
+  const conf = readConfig();
+  if (!isStarkAuthed(conf)) {
+    if (!credentials) {
+      throw new Error("Stark login required.");
+    }
+    conf.starkCredentials = credentials;
+    writeConfig(conf);
+  }
+  await Client.OverWriteClientOptions({
+    starkPrivateKey: conf.starkCredentials,
+  });
   return;
 }
 

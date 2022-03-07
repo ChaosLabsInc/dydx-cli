@@ -1,7 +1,7 @@
 import { PublicCallers } from "./public";
 import { PrivateCallers } from "./private";
 import { CallersMapping, CallType, Param } from "./types";
-import { AuthOrLogin } from "./auth";
+import { MasterAuthOrLogin } from "./auth";
 import { ClientSingleton } from "./client";
 
 export const Client = new ClientSingleton();
@@ -49,7 +49,7 @@ export function ParamFromKey(call: string, key: string, type: CallType): Param {
 
 export async function ExecuteCall(call: string, values: any[], type: CallType): Promise<any> {
   if (type === CallType.private) {
-    await AuthOrLogin();
+    await MasterAuthOrLogin();
   }
   const caller = Caller(type);
   return await caller[call].func(values);

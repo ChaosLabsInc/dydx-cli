@@ -11,18 +11,20 @@ import {
   AreYouSureQuestion,
   AddressQuestion,
   PrivateKeyQuestion,
+  StarkCredentialQuestions,
 } from "../questions/";
 import {
   Desciptions,
   ResetAuth,
   isPrivateKeyInEnv,
-  AuthOrLogin,
+  APIAuthOrLogin,
   configAddress,
   isAuthed,
   CallType,
   ExecuteCall,
+  StarkAuthOrLogin,
 } from "../client";
-import { logBlue, logGreen, logYellow } from "../utils";
+import { logBlue, logGreen, logYellow, StarkKeyPair } from "../utils";
 import { exit } from "process";
 
 const YOU_SELECTED = "You selected ";
@@ -48,7 +50,7 @@ export async function MainSelector(): Promise<void> {
     case MainChoices.PublicDesciptions:
       console.log(Desciptions(CallType.public));
       return MainSelector();
-    case MainChoices.PrivateCall:
+    case MainChoices.PrivateDesciptions:
       console.log(Desciptions(CallType.private));
       return MainSelector();
     case MainChoices.Quit:
@@ -76,12 +78,38 @@ export async function AuthSelector(): Promise<void> {
     case AuthChoices.Login:
       await LoginSelector();
       break;
+    case AuthChoices.Stark:
+      await StarkLoginSelector();
+      break;
     case AuthChoices.Reset:
       await ResetAuthSelector();
       break;
     case AuthChoices.Back:
       return MainSelector();
   }
+}
+
+export async function StarkLoginSelector(): Promise<void> {
+  const inquiries = StarkCredentialQuestions();
+  const choices = new Map<string, string>();
+  for (const inquiry of inquiries) {
+    const answered = await prompt(inquiry);
+    const choice = answered[inquiry[0].name];
+    logBlue(YOU_SELECTED + choice);
+    choices.set(inquiry[0].name, choice);
+  }
+  if (!choices.has("publicKey") || !choices.get("publicKeyYCoordinate") || !choices.get("privateKey")) {
+    logYellow("Invalid input for Stark credentials");
+    exit(0);
+  }
+  const credentials: StarkKeyPair = {
+    publicKey: choices.get("publicKey") ?? "",
+    publicKeyYCoordinate: choices.get("publicKeyYCoordinate") ?? "",
+    privateKey: choices.get("privateKey") ?? "",
+  };
+  await StarkAuthOrLogin(credentials);
+  logBlue("Logged in successfully.");
+  return MainSelector();
 }
 
 export async function LoginSelector(): Promise<void> {
@@ -102,7 +130,7 @@ export async function LoginSelector(): Promise<void> {
       exit(0);
     }
   }
-  await AuthOrLogin(address, key);
+  await APIAuthOrLogin(address, key);
   logBlue("Logged in successfully.");
   return MainSelector();
 }

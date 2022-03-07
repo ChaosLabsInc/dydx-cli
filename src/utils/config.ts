@@ -5,9 +5,17 @@ import { resolve } from "path";
 
 const path = "../../config/config.json";
 
+export interface StarkKeyPair {
+  publicKey: string;
+  publicKeyYCoordinate?: string;
+  privateKey: string;
+  walletAddress?: string;
+}
+
 export interface Config {
   EthAddress: string;
   apiCredentials?: ApiKeyCredentials;
+  starkCredentials?: StarkKeyPair;
 }
 
 export const EmptyConfig: Config = {

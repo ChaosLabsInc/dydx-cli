@@ -3,6 +3,7 @@ import { Inquiry } from "./types";
 export enum AuthChoices {
   Reset = "Reset Credentials",
   Login = "Login Using Ethereum Private Key",
+  Stark = "Login Using Stark Credentials",
   Back = "Back",
 }
 
@@ -38,6 +39,35 @@ export function AddressQuestion(): Inquiry[] {
       message: "Insert account Ethereum address",
       default: "",
     },
+  ];
+}
+
+export function StarkCredentialQuestions(): Inquiry[][] {
+  return [
+    [
+      {
+        type: "string",
+        name: "publicKey",
+        message: "Insert account Stark publicKey",
+        default: "",
+      },
+    ],
+    [
+      {
+        type: "string",
+        name: "publicKeyYCoordinate",
+        message: "Insert account Stark publicKeyYCoordinate",
+        default: "",
+      },
+    ],
+    [
+      {
+        type: "string",
+        name: "privateKey",
+        message: "Insert account Stark privateKey",
+        default: "",
+      },
+    ],
   ];
 }
 
