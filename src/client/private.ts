@@ -1,41 +1,42 @@
-import { Market, LeaderboardPnlPeriod, LeaderboardPnlSortBy } from "@dydxprotocol/v3-client";
+import {} from "@dydxprotocol/v3-client";
 import { CallersMapping, ParamType } from "./types";
 import { OptinalValue, Client } from "./utils";
+import { configAddress } from "./auth";
+
+export const EthPrivateCallers: CallersMapping = {
+  RegisterAPIKey: {
+    params: {},
+    description: "Create new API key credentials for a user.",
+    func: async (values: any[]) => {
+      const res = await Client.ethPrivate.createApiKey(configAddress());
+      return res;
+    },
+  },
+};
 
 export const PrivateCallers: CallersMapping = {
-  Example: {
-    params: {
-      period: {
-        type: ParamType.choice,
-        optional: false,
-        options: Object.values(LeaderboardPnlPeriod),
-      },
-      sortBy: {
-        type: ParamType.choice,
-        optional: true,
-        options: Object.values(LeaderboardPnlSortBy),
-      },
-      startingBeforeOrAt: {
-        type: ParamType.time,
-        optional: true,
-        options: undefined,
-        description: "ISO formatted time. empty string for default",
-      },
-      limit: {
-        type: ParamType.number,
-        optional: true,
-        options: undefined,
-        description: "Up to 100.",
-      },
-    },
-    description: "Get the top PNLs for a specified period and how they rank against each other.",
+  RegisterAPIKey: {
+    params: {},
+    description: "Create new API key credentials for a user.",
     func: async (values: any[]) => {
-      const res = await Client.public.getLeaderboardPnls({
-        period: values[0],
-        sortBy: OptinalValue(values[1]),
-        startingBeforeOrAt: OptinalValue(values[2]),
-        limit: OptinalValue(values[3]),
-      });
+      const res = await Client.ethPrivate.createApiKey(configAddress());
+      return res;
+    },
+  },
+  GetRegistration: {
+    params: {},
+    description:
+      "Gets the dYdX provided Ethereum signature required to send a registration transaction to the Starkware smart contract.",
+    func: async (values: any[]) => {
+      const res = await Client.private.getRegistration();
+      return res;
+    },
+  },
+  GetUser: {
+    params: {},
+    description: "return the user and user information.",
+    func: async (values: any[]) => {
+      const res = await Client.private.getUser();
       return res;
     },
   },

@@ -3,8 +3,13 @@ import { PrivateCallers } from "./private";
 import { DydxClient } from "@dydxprotocol/v3-client";
 import Web3 from "web3";
 import { CallersMapping, CallType, Param } from "./types";
+import { AuthOrLogin } from "./auth";
 
-const web3 = new Web3();
+// import detectEthereumProvider from "@metamask/detect-provider";
+
+// const provider = await detectEthereumProvider();
+
+const web3 = new Web3(Web3.givenProvider);
 const HTTP_HOST = "https://api.dydx.exchange";
 
 export const Client: DydxClient = new DydxClient(HTTP_HOST, {
@@ -54,6 +59,9 @@ export function ParamFromKey(call: string, key: string, type: CallType): Param {
 }
 
 export async function ExecuteCall(call: string, values: any[], type: CallType): Promise<any> {
+  if (type === CallType.private) {
+    await AuthOrLogin();
+  }
   const caller = Caller(type);
   return await caller[call].func(values);
 }
