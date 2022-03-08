@@ -79,7 +79,7 @@ async function Auth(address: string, inputPrivateKey?: string): Promise<ApiKeyCr
   if (!ethKey) {
     ethKey = process.env.ETHEREUM_PRIVATE_KEY;
     if (ethKey === undefined) {
-      throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key> or through CLI");
+      throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key>`");
     }
   }
   Client.client.web3?.eth.accounts.wallet.add(ethKey as string);
