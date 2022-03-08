@@ -6,6 +6,7 @@ const HTTP_HOST = "https://api.dydx.exchange";
 const STAGING_HTTP_HOST = "https://api.stage.dydx.exchange";
 
 const INFURA_NODE_URL = "https://mainnet.infura.io/v3/7b6391c3ea66406e83d69e9934fda70c";
+const INFURA_ROPSTEN_NODE_URL = "https://ropsten.infura.io/v3/7b6391c3ea66406e83d69e9934fda70c";
 
 export class ClientSingleton {
   public client: DydxClient;
@@ -20,10 +21,12 @@ export class ClientSingleton {
 }
 
 function BaseClient(options: ClientOptions): DydxClient {
-  return new DydxClient(process.env.STAGING ? STAGING_HTTP_HOST : HTTP_HOST, {
+  const nodeUrl = process.env.STAGING ? INFURA_ROPSTEN_NODE_URL : INFURA_NODE_URL;
+  const clientUrl = process.env.STAGING ? STAGING_HTTP_HOST : HTTP_HOST;
+  return new DydxClient(clientUrl, {
     apiTimeout: 15000,
     apiKeyCredentials: options.apiKeyCredentials,
-    web3: options.web3 ?? new Web3(new Web3.providers.HttpProvider(INFURA_NODE_URL)),
+    web3: options.web3 ?? new Web3(new Web3.providers.HttpProvider(nodeUrl)),
     starkPrivateKey: options.starkPrivateKey,
   });
 }

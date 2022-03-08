@@ -1,7 +1,6 @@
 import { ApiKeyCredentials } from "@dydxprotocol/v3-client";
 import fs from "fs";
 import { resolve } from "path";
-// import ConingFile from "../../config/config.json";
 
 const path = "../../config/config.json";
 
