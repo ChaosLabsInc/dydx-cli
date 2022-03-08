@@ -24,9 +24,10 @@ export function Calls(type: CallType): string[] {
   });
 }
 
-export function Desciptions(type: CallType): string[] {
+export function Desciptions(type: CallType): string[][] {
   return Object.entries(Caller(type)).map(([k, v]) => {
-    return `${k} - ${v.description}`;
+    return [k, v.description];
+    // return `${k} - ${v.description}`;
   });
 }
 

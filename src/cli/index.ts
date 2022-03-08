@@ -26,6 +26,7 @@ import {
 } from "../client";
 import { logBlue, logGreen, logYellow, StarkKeyPair } from "../utils";
 import { exit } from "process";
+import Table from "cli-table3";
 
 const YOU_SELECTED = "You selected ";
 const { prompt } = inquirer;
@@ -48,14 +49,26 @@ export async function MainSelector(): Promise<void> {
     case MainChoices.Auth:
       return AuthSelector();
     case MainChoices.PublicDesciptions:
-      console.log(Desciptions(CallType.public));
+      consoleDescriptions(Desciptions(CallType.public));
       return MainSelector();
     case MainChoices.PrivateDesciptions:
-      console.log(Desciptions(CallType.private));
+      consoleDescriptions(Desciptions(CallType.private));
       return MainSelector();
     case MainChoices.Quit:
       exit(0);
   }
+}
+
+export function consoleDescriptions(data: string[][]) {
+  const table = new Table({
+    head: ["Method", "Descriptions"],
+  });
+
+  for (const d of data) {
+    table.push(d);
+  }
+
+  console.log(table.toString());
 }
 
 export async function CallSelector(type: CallType): Promise<void> {
