@@ -36,10 +36,6 @@ export function ParamsKeys(call: string, type: CallType): string[] {
   return caller[call] ? Object.keys(caller[call].params) : [];
 }
 
-export function OptinalValue(v: any): any {
-  return v !== undefined && v !== "" && v !== -1 ? v : undefined;
-}
-
 export function ParamFromKey(call: string, key: string, type: CallType): Param {
   const caller = Caller(type);
   if (caller[call] && caller[call].params[key]) {

@@ -37,7 +37,7 @@ export function isPrivateKeyInEnv(): boolean {
 
 export async function MasterAuthOrLogin(): Promise<void> {
   await APIAuthOrLogin();
-  await StarkAuthOrLogin();
+  // await StarkAuthOrLogin();
 }
 
 export async function APIAuthOrLogin(address?: string, inputPrivateKey?: string): Promise<void> {

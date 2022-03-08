@@ -3,7 +3,7 @@ import { Inquiry } from "./types";
 export enum AuthChoices {
   Reset = "Reset Credentials",
   Login = "Login Using Ethereum Private Key",
-  Stark = "Login Using Stark Credentials",
+  // Stark = "Login Using Stark Credentials",
   Back = "Back",
 }
 

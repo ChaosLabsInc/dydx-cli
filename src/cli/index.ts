@@ -43,17 +43,17 @@ export async function MainSelector(): Promise<void> {
   const choice = answered[inquiry[0].name];
   switch (choice) {
     case MainChoices.PublicCall:
-      return CallSelector(CallType.public);
+      return await CallSelector(CallType.public);
     case MainChoices.PrivateCall:
-      return CallSelector(CallType.private);
+      return await CallSelector(CallType.private);
     case MainChoices.Auth:
-      return AuthSelector();
+      return await AuthSelector();
     case MainChoices.PublicDesciptions:
       consoleDescriptions(Desciptions(CallType.public));
-      return MainSelector();
+      return await MainSelector();
     case MainChoices.PrivateDesciptions:
       consoleDescriptions(Desciptions(CallType.private));
-      return MainSelector();
+      return await MainSelector();
     case MainChoices.Quit:
       exit(0);
   }
@@ -81,6 +81,7 @@ export async function CallSelector(type: CallType): Promise<void> {
   console.log(call, params);
   const res = await ExecuteCall(call, params, type);
   console.log(res);
+  return await MainSelector();
 }
 
 export async function AuthSelector(): Promise<void> {
@@ -91,9 +92,9 @@ export async function AuthSelector(): Promise<void> {
     case AuthChoices.Login:
       await LoginSelector();
       break;
-    case AuthChoices.Stark:
-      await StarkLoginSelector();
-      break;
+    // case AuthChoices.Stark:
+    //   await StarkLoginSelector();
+    //   break;
     case AuthChoices.Reset:
       await ResetAuthSelector();
       break;

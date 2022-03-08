@@ -1,6 +1,7 @@
 import { Market, CandleResolution, LeaderboardPnlPeriod, LeaderboardPnlSortBy } from "@dydxprotocol/v3-client";
 import { CallersMapping, ParamType } from "./types";
-import { OptinalValue, Client } from "./utils";
+import { Client } from "./utils";
+import { AppendOptionalAll, OptinalValue } from "./helpers";
 
 export const PublicCallers: CallersMapping = {
   GetMarkets: {
@@ -57,8 +58,8 @@ export const PublicCallers: CallersMapping = {
     params: {
       market: {
         type: ParamType.choice,
-        optional: false,
-        options: Object.values(Market),
+        optional: true,
+        options: AppendOptionalAll(Object.values(Market)),
       },
       days: {
         type: ParamType.choice,
@@ -68,7 +69,7 @@ export const PublicCallers: CallersMapping = {
     },
     description: "Get an individual market's statistics over a set period of time or all available periods of time.",
     func: async (values: any[]) => {
-      const res = await Client.client.public.getStats({ market: values[0], days: values[1] });
+      const res = await Client.client.public.getStats({ market: OptinalValue(values[0]), days: values[1] });
       return res;
     },
   },
@@ -178,7 +179,7 @@ export const PublicCallers: CallersMapping = {
       sortBy: {
         type: ParamType.choice,
         optional: true,
-        options: Object.values(LeaderboardPnlSortBy),
+        options: AppendOptionalAll(Object.values(LeaderboardPnlSortBy)),
       },
       startingBeforeOrAt: {
         type: ParamType.time,
