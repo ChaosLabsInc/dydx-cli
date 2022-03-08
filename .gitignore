@@ -9,3 +9,6 @@ artifacts
 /build/
 /build/*
 /config/config.json
+
+/app/
+/app/*
