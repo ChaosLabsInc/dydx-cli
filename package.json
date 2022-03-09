@@ -1,8 +1,8 @@
 {
   "name": "dydx-cli",
   "scripts": {
-    "start": "npx ts-node --files index.ts",
-    "test": "jest --verbose",
+    "debug": "npx ts-node src/index.ts",
+    "start": "node dist/index.js",
     "build": "npx tsc -b"
   },
   "devDependencies": {

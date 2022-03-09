@@ -35,6 +35,7 @@ export function Welcome() {
   clear();
   logGreen("🎉 ✨ 🔥 DyDX Public CLI by: 🎉 ✨ 🔥");
   logBlue(figlet.textSync("Chaos Labs"));
+  logAccountDetails();
 }
 
 export async function MainSelector(): Promise<void> {
@@ -57,18 +58,6 @@ export async function MainSelector(): Promise<void> {
     case MainChoices.Quit:
       exit(0);
   }
-}
-
-export function consoleDescriptions(data: string[][]) {
-  const table = new Table({
-    head: ["Method", "Descriptions"],
-  });
-
-  for (const d of data) {
-    table.push(d);
-  }
-
-  console.log(table.toString());
 }
 
 export async function CallSelector(type: CallType): Promise<void> {
@@ -103,7 +92,18 @@ export async function AuthSelector(): Promise<void> {
   }
 }
 
-export async function StarkLoginSelector(): Promise<void> {
+function logAccountDetails(): void {
+  const account = configAddress();
+  const accountState = account !== "" ? `${account}` : `Logged Out`;
+  const authed = isAuthed();
+  const authState = authed ? `Authenticated` : `Logged Out`;
+  const accountLog = `* Account: <${accountState}>`;
+  const authLog = `* API: <${authState}>`;
+  logGreen(accountLog);
+  logGreen(authLog);
+}
+
+async function StarkLoginSelector(): Promise<void> {
   const inquiries = StarkCredentialQuestions();
   const choices = new Map<string, string>();
   for (const inquiry of inquiries) {
@@ -126,7 +126,7 @@ export async function StarkLoginSelector(): Promise<void> {
   return MainSelector();
 }
 
-export async function LoginSelector(): Promise<void> {
+async function LoginSelector(): Promise<void> {
   let address = configAddress();
   if (address === "") {
     const inquiry = AddressQuestion();
@@ -149,7 +149,7 @@ export async function LoginSelector(): Promise<void> {
   return MainSelector();
 }
 
-export async function ResetAuthSelector(): Promise<void> {
+async function ResetAuthSelector(): Promise<void> {
   const inquiry = AreYouSureQuestion();
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
@@ -158,7 +158,7 @@ export async function ResetAuthSelector(): Promise<void> {
   return MainSelector();
 }
 
-export async function selectCall(type: CallType): Promise<string> {
+async function selectCall(type: CallType): Promise<string> {
   const inquiry = CallQuestion(type);
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
@@ -166,7 +166,7 @@ export async function selectCall(type: CallType): Promise<string> {
   return choice;
 }
 
-export async function fillParams(call: string, type: CallType): Promise<string[]> {
+async function fillParams(call: string, type: CallType): Promise<string[]> {
   const inquiries = ParamQuestions(call, type);
   const choices = [];
   for (const inquiry of inquiries) {
@@ -176,4 +176,14 @@ export async function fillParams(call: string, type: CallType): Promise<string[]
     choices.push(choice);
   }
   return choices;
+}
+
+function consoleDescriptions(data: string[][]) {
+  const table = new Table({
+    head: ["Method", "Descriptions"],
+  });
+  for (const d of data) {
+    table.push(d);
+  }
+  console.log(table.toString());
 }

@@ -1,8 +1,8 @@
 import { Inquiry } from "./types";
 
 export enum AuthChoices {
-  Reset = "Reset Credentials",
   Login = "Login Using Ethereum Private Key",
+  Reset = "Reset Credentials",
   // Stark = "Login Using Stark Credentials",
   Back = "Back",
 }
@@ -77,7 +77,7 @@ export function PrivateKeyQuestion(): Inquiry[] {
       type: "string",
       name: "private key",
       message:
-        "Insert account private key or make sure it is set using `export ETHEREUM_PRIVATE_KEY=<key>` (and press enter).",
+        "Insert account private key or make sure it is set using `export ETHEREUM_PRIVATE_KEY=<key>` (and press enter). It will not be stored.",
       default: "",
     },
   ];

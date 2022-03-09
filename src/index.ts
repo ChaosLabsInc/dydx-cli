@@ -1,4 +1,4 @@
-import { Welcome, MainSelector } from "./src/cli";
+import { Welcome, MainSelector } from "./cli/main";
 
 async function main() {
   Welcome();
