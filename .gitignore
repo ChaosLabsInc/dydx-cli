@@ -8,6 +8,8 @@ artifacts
 
 /build/
 /build/*
+/dist/
+/dist/*
 /config/config.json
 
 /app/
