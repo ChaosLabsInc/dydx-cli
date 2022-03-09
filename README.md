@@ -7,6 +7,9 @@
 After installation, to start the CLI run `npm run start` and the CLI menu will open
 See sections below for detailed instructions of the dfferent options.
 
+<img src="./demo/demo.svg">
+
+
 # Installation
 
 1. git clone repo.
