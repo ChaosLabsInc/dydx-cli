@@ -139,7 +139,7 @@ async function LoginSelector(): Promise<void> {
     const keyInquiry = PrivateKeyQuestion();
     const answered2 = await prompt(keyInquiry);
     key = answered2[keyInquiry[0].name];
-    if ((key = "")) {
+    if (key === "") {
       logYellow("Expected private key in env (ETHEREUM_PRIVATE_KEY). Try again.");
       exit(0);
     }
