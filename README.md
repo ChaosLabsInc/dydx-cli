@@ -1,4 +1,4 @@
-# Chaos Labs <> dYdXCLI
+# Chaos Labs <> dYdX CLI
 
 ![image](https://user-images.githubusercontent.com/25058984/157460460-808a572e-227a-4e54-a4bb-8906999dde73.png)
 
@@ -24,7 +24,7 @@ The <a href="https://docs.dYdX.exchange/?typescript#public-http-api" target="_bl
 <a href="https://docs.dYdX.exchange/?typescript#private-http-api" target="_blank">Private API </a> requires authentication, see Authentication section beefore the first use.
 In addition, using the Prviate API requires that the user will finish onboarding through the UI first for it work.
 If your API requests fail with `API key not found` - that means the onboarding proccess is not done.
-Finished the onboarding to dYdXhere <a href="https://trade.dYdX.exchange/portfolio/overview" target="_blank">Private API </a>
+Finished the onboarding to dYdX here <a href="https://trade.dYdX.exchange/portfolio/overview" target="_blank">Private API </a>
 
 - You can view all the available calls and their descriptions through _'See Private Method Descriptions'_ option.
 
@@ -54,7 +54,7 @@ Let's see how we get the **_GetMarkets_** from the Public API:
 When first starting, the CLI will show that you're logged out, like so:
 <img width="554" alt="image" src="https://user-images.githubusercontent.com/25058984/157411049-dabdc77b-80c1-4e52-b2e8-a94ca16b1bca.png">
 
-- In order to authenticate you CLI against dYdXthe wallet private key is required, once, to fetch the dYdXcredentials. The key will not be saved, but the dYdXcredentials will be stored into the `config/config.json`.
+- In order to authenticate you CLI against dYdX the wallet private key is required, once, to fetch the dYdX credentials. The key will not be saved, but the dYdX credentials will be stored into the `config/config.json`.
 
 1. Go to _'Authentication Options'_ in the main menu.
 2. Go to _'Login Using Ethereum Private Key'_
