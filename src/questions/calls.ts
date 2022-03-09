@@ -6,7 +6,7 @@ export function CallQuestion(type: CallType): Inquiry[] {
     {
       type: "rawlist",
       name: "Calls",
-      message: "Select DyDx call",
+      message: "Select dYdX call",
       choices: Calls(type),
       default: [],
     },

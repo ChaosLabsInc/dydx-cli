@@ -353,7 +353,7 @@ export const PrivateCallers: CallersMapping = {
  
 * Below Callers are not being used yet because of lack of support by non-MetaMask web3 node providers.
 
-       These include the onboarding, ethPrivate sub-sections of the DyDx client.
+       These include the onboarding, ethPrivate sub-sections of the dYdX client.
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 

@@ -33,7 +33,7 @@ const { prompt } = inquirer;
 
 export function Welcome() {
   clear();
-  logGreen("🎉 ✨ 🔥 DyDX Public CLI by: 🎉 ✨ 🔥");
+  logGreen("🎉 ✨ 🔥 dYdX Public CLI by: 🎉 ✨ 🔥");
   logBlue(figlet.textSync("Chaos Labs"));
   logAccountDetails();
 }
