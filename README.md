@@ -1,5 +1,8 @@
 # Chaos Labs <> DyDX CLI
 
+![image](https://user-images.githubusercontent.com/25058984/157460137-5fbb7f48-58e7-44e2-a1e3-5059e844d53e.png)
+
+
 # Usage:
 
  After installation, to start the CLI run `npm run start` and the CLI menu will open
