@@ -13,26 +13,6 @@
 3. run `npm run build` from inside the repo.
 
 
-
-# Authentication:
-
-* Authenticaiton is only required for the Private API. If you're using the <a href="https://docs.dydx.exchange/?typescript#public-http-api" target="_blank">Public API </a> then you can simply start using the CLI.
-* Authentication is only required once. The authenticaiton credentials will be stored under `config/config.json` for future usage of the CLI.
-
-### Authenticaiton flow:
-When first starting, the CLI will show that you're logged out, like so:
-<img width="554" alt="image" src="https://user-images.githubusercontent.com/25058984/157411049-dabdc77b-80c1-4e52-b2e8-a94ca16b1bca.png">
-
-* In order to authenticate you CLI against DyDx the wallet private key is required, once, to fetch the DyDX credentials. The key will not be saved, but the DyDX credentials will be stored into the `config/config.json`.
-
-1. Go to _'Authentication Options'_ in the main menu.
-2. Go to _'Login Using Ethereum Private Key'_
-3. Enter your wallet address.
-4. Enter your private key.
-
-Done. When you next open the CLI you should see that you're logged in like so:
-<img width="589" alt="image" src="https://user-images.githubusercontent.com/25058984/157411238-be9c5abe-b4a6-44be-8f58-49ed7fb9231f.png">
-
 ## Public API: 
 
 The <a href="https://docs.dydx.exchange/?typescript#public-http-api" target="_blank">Public API </a> can be used directly by following the CLI instructions, for optional values, leaving an empty input will result in discarding these fields form the call.
@@ -64,5 +44,26 @@ Let's see how we get the **_GetMarkets_** from the Public API:
 
 4. Done:
 <img width="640" alt="image" src="https://user-images.githubusercontent.com/25058984/157417725-9d8b24a4-a68a-4049-b770-a294fcbdad53.png">
+
+
+# Authentication:
+
+* Authenticaiton is only required for the Private API. If you're using the <a href="https://docs.dydx.exchange/?typescript#public-http-api" target="_blank">Public API </a> then you can simply start using the CLI.
+* Authentication is only required once. The authenticaiton credentials will be stored under `config/config.json` for future usage of the CLI.
+
+### Authenticaiton flow:
+When first starting, the CLI will show that you're logged out, like so:
+<img width="554" alt="image" src="https://user-images.githubusercontent.com/25058984/157411049-dabdc77b-80c1-4e52-b2e8-a94ca16b1bca.png">
+
+* In order to authenticate you CLI against DyDx the wallet private key is required, once, to fetch the DyDX credentials. The key will not be saved, but the DyDX credentials will be stored into the `config/config.json`.
+
+1. Go to _'Authentication Options'_ in the main menu.
+2. Go to _'Login Using Ethereum Private Key'_
+3. Enter your wallet address.
+4. Enter your private key.
+
+Done. When you next open the CLI you should see that you're logged in like so:
+<img width="589" alt="image" src="https://user-images.githubusercontent.com/25058984/157411238-be9c5abe-b4a6-44be-8f58-49ed7fb9231f.png">
+
 
 
