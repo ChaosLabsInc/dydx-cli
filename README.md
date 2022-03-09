@@ -1,6 +1,6 @@
 # Chaos Labs <> DyDX CLI
 
-![image](https://user-images.githubusercontent.com/25058984/157460137-5fbb7f48-58e7-44e2-a1e3-5059e844d53e.png)
+![image](https://user-images.githubusercontent.com/25058984/157460460-808a572e-227a-4e54-a4bb-8906999dde73.png)
 
 
 # Usage:
