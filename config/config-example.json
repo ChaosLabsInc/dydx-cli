@@ -4,5 +4,6 @@
     "secret": "",
     "key": "",
     "passphrase": ""
-  }
+  },
+  "developerMode": false
 }

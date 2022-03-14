@@ -15,10 +15,12 @@ export interface Config {
   EthAddress: string;
   apiCredentials?: ApiKeyCredentials;
   starkCredentials?: StarkKeyPair;
+  developerMode: boolean;
 }
 
 export const EmptyConfig: Config = {
   EthAddress: "",
+  developerMode: false,
 };
 
 export function readConfig(): Config {
@@ -37,4 +39,10 @@ export function writeConfig(confing: Config): void {
       console.log(err);
     }
   });
+}
+
+export async function FlipDevelopMode(): Promise<void> {
+  const conf = readConfig();
+  conf.developerMode = !conf.developerMode;
+  writeConfig(conf);
 }

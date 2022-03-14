@@ -12,6 +12,8 @@ import {
   AddressQuestion,
   PrivateKeyQuestion,
   StarkCredentialQuestions,
+  DeveloperQuesstion,
+  YesNoChoice,
 } from "../questions/";
 import {
   Desciptions,
@@ -24,7 +26,7 @@ import {
   ExecuteCall,
   StarkAuthOrLogin,
 } from "../client";
-import { logBlue, logGreen, logYellow, StarkKeyPair } from "../utils";
+import { FlipDevelopMode, logBlue, logGreen, logYellow, readConfig, StarkKeyPair } from "../utils";
 import { exit } from "process";
 import Table from "cli-table3";
 
@@ -55,6 +57,8 @@ export async function MainSelector(): Promise<void> {
     case MainChoices.PrivateDesciptions:
       consoleDescriptions(Desciptions(CallType.private));
       return await MainSelector();
+    case MainChoices.DeveloperMode:
+      return await DeveloperSelection();
     case MainChoices.Quit:
       exit(0);
   }
@@ -73,6 +77,17 @@ export async function CallSelector(type: CallType): Promise<void> {
   return await MainSelector();
 }
 
+export async function DeveloperSelection(): Promise<void> {
+  const inquiry = DeveloperQuesstion();
+  const answered = await prompt(inquiry);
+  const choice = answered[inquiry[0].name];
+  logBlue(YOU_SELECTED + choice);
+  if (choice === YesNoChoice.yes) {
+    FlipDevelopMode();
+  }
+  return MainSelector();
+}
+
 export async function AuthSelector(): Promise<void> {
   const inquiry = AuthMainQuestion();
   const answered = await prompt(inquiry);
@@ -81,9 +96,9 @@ export async function AuthSelector(): Promise<void> {
     case AuthChoices.Login:
       await LoginSelector();
       break;
-    // case AuthChoices.Stark:
-    //   await StarkLoginSelector();
-    //   break;
+    case AuthChoices.Stark:
+      await StarkLoginSelector();
+      break;
     case AuthChoices.Reset:
       await ResetAuthSelector();
       break;
@@ -101,6 +116,9 @@ function logAccountDetails(): void {
   const authLog = `* API: <${authState}>`;
   logGreen(accountLog);
   logGreen(authLog);
+  if (readConfig().developerMode) {
+    logGreen("* <Developer Mode>");
+  }
 }
 
 async function StarkLoginSelector(): Promise<void> {
@@ -154,7 +172,9 @@ async function ResetAuthSelector(): Promise<void> {
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
   logBlue(YOU_SELECTED + choice);
-  ResetAuth();
+  if (choice === YesNoChoice.yes) {
+    ResetAuth();
+  }
   return MainSelector();
 }
 

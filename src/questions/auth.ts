@@ -1,36 +1,28 @@
+import { readConfig } from "../utils";
 import { Inquiry } from "./types";
 
 export enum AuthChoices {
+  Stark = "Login Using Stark Credentials",
   Login = "Login Using Ethereum Private Key",
   Reset = "Reset Credentials",
-  // Stark = "Login Using Stark Credentials",
   Back = "Back",
 }
 
 export function AuthMainQuestion(): Inquiry[] {
+  let choices = Object.values(AuthChoices);
+  if (!readConfig().developerMode) {
+    choices = choices.filter((v) => v !== AuthChoices.Login);
+  }
   return [
     {
       type: "rawlist",
       name: "Main",
       message: "Select Option",
-      choices: Object.values(AuthChoices),
+      choices: choices,
       default: [AuthChoices.Login],
     },
   ];
 }
-
-export function AreYouSureQuestion(): Inquiry[] {
-  return [
-    {
-      type: "rawlist",
-      name: "AreYouSure",
-      message: "Are you sure you want to continue?",
-      choices: ["yes", "no"],
-      default: "yes",
-    },
-  ];
-}
-
 export function AddressQuestion(): Inquiry[] {
   return [
     {
