@@ -45,9 +45,6 @@ export function ParamFromKey(call: string, key: string, type: CallType): Param {
 }
 
 export async function ExecuteCall(call: string, values: any[], type: CallType): Promise<any> {
-  if (type === CallType.private) {
-    await MasterAuthOrLogin();
-  }
   const caller = Caller(type);
   return await caller[call].func(values);
 }

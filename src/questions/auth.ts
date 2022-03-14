@@ -2,8 +2,9 @@ import { readConfig } from "../utils";
 import { Inquiry } from "./types";
 
 export enum AuthChoices {
+  Login = "Login API Credentials",
   Stark = "Login Using Stark Credentials",
-  Login = "Login Using Ethereum Private Key",
+  DeveloperLogin = "Login Using Ethereum Private Key",
   Reset = "Reset Credentials",
   Back = "Back",
 }
@@ -11,7 +12,7 @@ export enum AuthChoices {
 export function AuthMainQuestion(): Inquiry[] {
   let choices = Object.values(AuthChoices);
   if (!readConfig().developerMode) {
-    choices = choices.filter((v) => v !== AuthChoices.Login);
+    choices = choices.filter((v) => v !== AuthChoices.DeveloperLogin);
   }
   return [
     {
@@ -23,6 +24,7 @@ export function AuthMainQuestion(): Inquiry[] {
     },
   ];
 }
+
 export function AddressQuestion(): Inquiry[] {
   return [
     {
@@ -31,6 +33,35 @@ export function AddressQuestion(): Inquiry[] {
       message: "Insert account Ethereum address",
       default: "",
     },
+  ];
+}
+
+export function ApiCredentialsQuestions(): Inquiry[][] {
+  return [
+    [
+      {
+        type: "string",
+        name: "key",
+        message: "Insert API key",
+        default: "",
+      },
+    ],
+    [
+      {
+        type: "string",
+        name: "secret",
+        message: "Insert API secret",
+        default: "",
+      },
+    ],
+    [
+      {
+        type: "string",
+        name: "passphrase",
+        message: "Insert API passphrase",
+        default: "",
+      },
+    ],
   ];
 }
 

@@ -8,7 +8,6 @@ export interface StarkKeyPair {
   publicKey: string;
   publicKeyYCoordinate?: string;
   privateKey: string;
-  walletAddress?: string;
 }
 
 export interface Config {

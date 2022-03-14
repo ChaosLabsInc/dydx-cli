@@ -369,6 +369,14 @@ export const EthPrivateCallers: CallersMapping = {
       return res;
     },
   },
+  Recovery: {
+    params: {},
+    description: "Create new API key credentials for a user.",
+    func: async (values: any[]) => {
+      const res = await Client.client.ethPrivate.recovery(configAddress());
+      return res;
+    },
+  },
 };
 
 export const PrviateOnboardingCallers: CallersMapping = {

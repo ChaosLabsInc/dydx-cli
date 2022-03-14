@@ -3,6 +3,10 @@ import { readConfig, writeConfig, Config, EmptyConfig, StarkKeyPair } from "../u
 import { Client } from "./utils";
 
 export function isAuthed(conf?: Config): boolean {
+  return isAPIAuthed(conf);
+}
+
+export function isAPIAuthed(conf?: Config): boolean {
   conf = conf ?? readConfig();
   if (conf.apiCredentials !== undefined && conf.apiCredentials.key !== "" && conf.apiCredentials.key !== undefined) {
     return true;
@@ -36,11 +40,33 @@ export function isPrivateKeyInEnv(): boolean {
 }
 
 export async function MasterAuthOrLogin(): Promise<void> {
-  await APIAuthOrLogin();
-  // await StarkAuthOrLogin();
+  await APILogin();
+  if (isStarkAuthed()) {
+    await StarkAuthOrLogin();
+  }
 }
 
-export async function APIAuthOrLogin(address?: string, inputPrivateKey?: string): Promise<void> {
+export async function APILogin(): Promise<void> {
+  const conf = readConfig();
+  if (!conf.EthAddress) {
+    throw new Error("Eth Address not provided.");
+  }
+  if (!isAuthed(conf)) {
+    throw new Error("Not Authorized - please login.");
+  }
+  Client.client.apiKeyCredentials = conf.apiCredentials;
+  return;
+}
+
+export async function APIAuth(credentials?: ApiKeyCredentials): Promise<void> {
+  const conf = readConfig();
+  conf.apiCredentials = credentials;
+  writeConfig(conf);
+  Client.client.apiKeyCredentials = conf.apiCredentials;
+  return;
+}
+
+export async function PrivateAuthOrLogin(address?: string, inputPrivateKey?: string): Promise<void> {
   const conf = readConfig();
   if (!address && !conf.EthAddress) {
     throw new Error("Eth Address not provided.");
@@ -50,7 +76,7 @@ export async function APIAuthOrLogin(address?: string, inputPrivateKey?: string)
     writeConfig(conf);
   }
   if (!isAuthed(conf)) {
-    const credentials = await Auth(conf.EthAddress, inputPrivateKey);
+    const credentials = await AuthPrivateKey(conf.EthAddress, inputPrivateKey);
     conf.apiCredentials = credentials;
     writeConfig(conf);
   }
@@ -60,6 +86,9 @@ export async function APIAuthOrLogin(address?: string, inputPrivateKey?: string)
 
 export async function StarkAuthOrLogin(credentials?: StarkKeyPair): Promise<void> {
   const conf = readConfig();
+  if (!conf.EthAddress) {
+    throw new Error("Eth Address not provided.");
+  }
   if (!isStarkAuthed(conf)) {
     if (!credentials) {
       throw new Error("Stark login required.");
@@ -74,16 +103,19 @@ export async function StarkAuthOrLogin(credentials?: StarkKeyPair): Promise<void
 }
 
 //Auth - require ETHEREUM_PRIVATE_KEY in the env variable.
-async function Auth(address: string, inputPrivateKey?: string): Promise<ApiKeyCredentials> {
+async function AuthPrivateKey(address: string, inputPrivateKey?: string): Promise<ApiKeyCredentials> {
   let ethKey = inputPrivateKey;
   if (!ethKey) {
     ethKey = process.env.ETHEREUM_PRIVATE_KEY;
     if (ethKey === undefined) {
-      throw new Error("Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key>`");
+      throw new Error(
+        "Need to provide eth private through env: 'export ETHEREUM_PRIVATE_KEY=<key>` or choose different auth option."
+      );
     }
   }
   Client.client.web3?.eth.accounts.wallet.add(ethKey as string);
   const credentials = await Client.client.onboarding.recoverDefaultApiCredentials(address);
+
   return credentials;
 }
 

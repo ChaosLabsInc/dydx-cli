@@ -14,21 +14,26 @@ import {
   StarkCredentialQuestions,
   DeveloperQuesstion,
   YesNoChoice,
+  ApiCredentialsQuestions,
 } from "../questions/";
 import {
   Desciptions,
   ResetAuth,
   isPrivateKeyInEnv,
-  APIAuthOrLogin,
   configAddress,
   isAuthed,
   CallType,
   ExecuteCall,
   StarkAuthOrLogin,
+  MasterAuthOrLogin,
+  PrivateAuthOrLogin,
+  APIAuth,
+  isStarkAuthed,
 } from "../client";
 import { FlipDevelopMode, logBlue, logGreen, logYellow, readConfig, StarkKeyPair } from "../utils";
 import { exit } from "process";
 import Table from "cli-table3";
+import { ApiKeyCredentials } from "@dydxprotocol/v3-client";
 
 const YOU_SELECTED = "You selected ";
 const { prompt } = inquirer;
@@ -66,9 +71,10 @@ export async function MainSelector(): Promise<void> {
 
 export async function CallSelector(type: CallType): Promise<void> {
   if (type === CallType.private && !isAuthed()) {
-    logYellow(`You must authenticate first - Go to ${MainChoices.Auth}`);
+    logYellow(`You must authenticate API first - Go to ${MainChoices.Auth}`);
     return MainSelector();
   }
+  await MasterAuthOrLogin();
   const call = await selectCall(type);
   const params = await fillParams(call, type);
   console.log(call, params);
@@ -93,8 +99,11 @@ export async function AuthSelector(): Promise<void> {
   const answered = await prompt(inquiry);
   const choice = answered[inquiry[0].name];
   switch (choice) {
-    case AuthChoices.Login:
+    case AuthChoices.DeveloperLogin:
       await LoginSelector();
+      break;
+    case AuthChoices.Login:
+      await ApiCredentialsLoginSelector();
       break;
     case AuthChoices.Stark:
       await StarkLoginSelector();
@@ -112,10 +121,14 @@ function logAccountDetails(): void {
   const accountState = account !== "" ? `${account}` : `Logged Out`;
   const authed = isAuthed();
   const authState = authed ? `Authenticated` : `Logged Out`;
+  const starkAuthed = isStarkAuthed();
+  const StarkAuthState = starkAuthed ? `Authenticated` : `Logged Out`;
   const accountLog = `* Account: <${accountState}>`;
   const authLog = `* API: <${authState}>`;
+  const StarkauthLog = `* Stark: <${StarkAuthState}>`;
   logGreen(accountLog);
   logGreen(authLog);
+  logGreen(StarkauthLog);
   if (readConfig().developerMode) {
     logGreen("* <Developer Mode>");
   }
@@ -144,6 +157,29 @@ async function StarkLoginSelector(): Promise<void> {
   return MainSelector();
 }
 
+async function ApiCredentialsLoginSelector(): Promise<void> {
+  const inquiries = ApiCredentialsQuestions();
+  const choices = new Map<string, string>();
+  for (const inquiry of inquiries) {
+    const answered = await prompt(inquiry);
+    const choice = answered[inquiry[0].name];
+    logBlue(YOU_SELECTED + choice);
+    choices.set(inquiry[0].name, choice);
+  }
+  if (!choices.has("key") || !choices.get("secret") || !choices.get("passphrase")) {
+    logYellow("Invalid input for Stark credentials");
+    exit(0);
+  }
+  const credentials: ApiKeyCredentials = {
+    key: choices.get("key") ?? "",
+    secret: choices.get("secret") ?? "",
+    passphrase: choices.get("passphrase") ?? "",
+  };
+  await APIAuth(credentials);
+  logBlue("Logged in successfully.");
+  return MainSelector();
+}
+
 async function LoginSelector(): Promise<void> {
   let address = configAddress();
   if (address === "") {
@@ -162,7 +198,7 @@ async function LoginSelector(): Promise<void> {
       exit(0);
     }
   }
-  await APIAuthOrLogin(address, key);
+  await PrivateAuthOrLogin(address, key);
   logBlue("Logged in successfully.");
   return MainSelector();
 }
