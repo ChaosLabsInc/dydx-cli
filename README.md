@@ -24,7 +24,7 @@ The <a href="https://docs.dYdX.exchange/?typescript#public-http-api" target="_bl
 
 ## Private API:
 
-<a href="https://docs.dYdX.exchange/?typescript#private-http-api" target="_blank">Private API </a> requires authentication, see Authentication section beefore the first use.
+<a href="https://docs.dYdX.exchange/?typescript#private-http-api" target="_blank">Private API </a> requires API authentication, see Authentication section beefore the first use.
 In addition, using the Prviate API requires that the user will finish onboarding through the UI first for it work.
 If your API requests fail with `API key not found` - that means the onboarding proccess is not done.
 Finished the onboarding to dYdX here <a href="https://trade.dYdX.exchange/portfolio/overview" target="_blank">Private API </a>
@@ -35,27 +35,46 @@ Finished the onboarding to dYdX here <a href="https://trade.dYdX.exchange/portfo
 
 Let's see how we get the **_GetMarkets_** from the Public API:
 
-1. Choose _'Call Public Methods'_
-   <img width="567" alt="image" src="https://user-images.githubusercontent.com/25058984/157417045-f3cbe675-23a8-44b0-a9f2-4b1558fd19b3.png">
+1. Choose _'Call Public Methods'_:
+<img width="567" alt="image" src="https://user-images.githubusercontent.com/25058984/157417045-f3cbe675-23a8-44b0-a9f2-4b1558fd19b3.png">
 
-2. Choose _'GetMarkets'_
-   <img width="540" alt="image" src="https://user-images.githubusercontent.com/25058984/157417440-156f191e-5a96-461a-a482-c154356b919e.png">
+2. Choose _'GetMarkets'_:
+<img width="540" alt="image" src="https://user-images.githubusercontent.com/25058984/157417440-156f191e-5a96-461a-a482-c154356b919e.png">
 
 3. Enter the required parameters for the _'GetMarkets'_ method:
-   <img width="521" alt="image" src="https://user-images.githubusercontent.com/25058984/157417629-0d03cc6f-da54-42e8-a69e-9b02940c913d.png">
+<img width="521" alt="image" src="https://user-images.githubusercontent.com/25058984/157417629-0d03cc6f-da54-42e8-a69e-9b02940c913d.png">
 
 4. Done:
-   <img width="640" alt="image" src="https://user-images.githubusercontent.com/25058984/157417725-9d8b24a4-a68a-4049-b770-a294fcbdad53.png">
+<img width="640" alt="image" src="https://user-images.githubusercontent.com/25058984/157417725-9d8b24a4-a68a-4049-b770-a294fcbdad53.png">
 
 # Authentication:
 
 - Authenticaiton is only required for the Private API. If you're using the <a href="https://docs.dYdX.exchange/?typescript#public-http-api" target="_blank">Public API </a> then you can simply start using the CLI.
 - Authentication is only required once. The authenticaiton credentials will be stored under `config/config.json` for future usage of the CLI.
 
-### Authenticaiton flow:
+### Authenticaiton (Private wallet key) flow:
 
 When first starting, the CLI will show that you're logged out, like so:
 <img width="554" alt="image" src="https://user-images.githubusercontent.com/25058984/157411049-dabdc77b-80c1-4e52-b2e8-a94ca16b1bca.png">
+
+- In order to authenticate you CLI against dYdX the wallet private key is required, once, to fetch the dYdX credentials. The key will not be saved, but the dYdX credentials will be stored into the `config/config.json`.
+
+1. Go to _'Authentication Options'_ in the main menu.
+2. Go to _'Login API Credentials'_
+3. Enter your wallet address.
+4. Enter your API key.
+5. Enter your API secret.
+6. Enter your API passphrase.
+
+Done. When you next open the CLI you should see that you're logged in like so:
+<img width="589" alt="image" src="https://user-images.githubusercontent.com/25058984/157411238-be9c5abe-b4a6-44be-8f58-49ed7fb9231f.png">
+
+
+
+
+### Authenticaiton (Private wallet key) flow:
+
+* This flow is only availalbe in `developer mode` which can be turned on from the CLI.
 
 - In order to authenticate you CLI against dYdX the wallet private key is required, once, to fetch the dYdX credentials. The key will not be saved, but the dYdX credentials will be stored into the `config/config.json`.
 
@@ -64,5 +83,3 @@ When first starting, the CLI will show that you're logged out, like so:
 3. Enter your wallet address.
 4. Enter your private key.
 
-Done. When you next open the CLI you should see that you're logged in like so:
-<img width="589" alt="image" src="https://user-images.githubusercontent.com/25058984/157411238-be9c5abe-b4a6-44be-8f58-49ed7fb9231f.png">
