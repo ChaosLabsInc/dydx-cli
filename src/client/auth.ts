@@ -58,6 +58,12 @@ export async function APILogin(): Promise<void> {
   return;
 }
 
+export async function SetAddress(address: string): Promise<void> {
+  const conf = readConfig();
+  conf.EthAddress = address;
+  writeConfig(conf);
+}
+
 export async function APIAuth(credentials?: ApiKeyCredentials): Promise<void> {
   const conf = readConfig();
   conf.apiCredentials = credentials;

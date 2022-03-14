@@ -1,7 +1,6 @@
 import { PublicCallers } from "./public";
 import { PrivateCallers } from "./private";
 import { CallersMapping, CallType, Param } from "./types";
-import { MasterAuthOrLogin } from "./auth";
 import { ClientSingleton } from "./client";
 
 export const Client = new ClientSingleton();
@@ -27,7 +26,6 @@ export function Calls(type: CallType): string[] {
 export function Desciptions(type: CallType): string[][] {
   return Object.entries(Caller(type)).map(([k, v]) => {
     return [k, v.description];
-    // return `${k} - ${v.description}`;
   });
 }
 

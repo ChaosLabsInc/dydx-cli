@@ -15,6 +15,8 @@ import {
   DeveloperQuesstion,
   YesNoChoice,
   ApiCredentialsQuestions,
+  SEARCH_OPTION,
+  FilterQuestion,
 } from "../questions/";
 import {
   Desciptions,
@@ -29,6 +31,7 @@ import {
   PrivateAuthOrLogin,
   APIAuth,
   isStarkAuthed,
+  SetAddress,
 } from "../client";
 import { FlipDevelopMode, logBlue, logGreen, logYellow, readConfig, StarkKeyPair } from "../utils";
 import { exit } from "process";
@@ -158,6 +161,14 @@ async function StarkLoginSelector(): Promise<void> {
 }
 
 async function ApiCredentialsLoginSelector(): Promise<void> {
+  let address = configAddress();
+  if (address === "") {
+    const inquiry = AddressQuestion();
+    const answered = await prompt(inquiry);
+    address = answered[inquiry[0].name];
+    logBlue(YOU_SELECTED + address);
+    await SetAddress(address);
+  }
   const inquiries = ApiCredentialsQuestions();
   const choices = new Map<string, string>();
   for (const inquiry of inquiries) {
@@ -227,7 +238,18 @@ async function fillParams(call: string, type: CallType): Promise<string[]> {
   const choices = [];
   for (const inquiry of inquiries) {
     const answered = await prompt(inquiry);
-    const choice = answered[inquiry[0].name];
+    let choice = answered[inquiry[0].name];
+    if (choice === SEARCH_OPTION && inquiry[0].choices) {
+      const filterQuestion = FilterQuestion();
+      const answeredFilter = await prompt(filterQuestion);
+      const filter = answeredFilter[filterQuestion[0].name];
+      const filtered = inquiry[0].choices.filter((item) => {
+        return item.toLowerCase().includes(filter.toLowerCase());
+      });
+      inquiry[0].choices = filtered;
+      const answered = await prompt(inquiry);
+      choice = answered[inquiry[0].name];
+    }
     logBlue(YOU_SELECTED + choice);
     choices.push(choice);
   }

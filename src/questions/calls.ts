@@ -1,6 +1,19 @@
 import { Calls, ParamsKeys, ParamFromKey, ParamType, CallType } from "../client";
 import { Inquiry } from "./types";
 
+export const SEARCH_OPTION = "<Type Input To Filter Options>";
+
+export function FilterQuestion(): Inquiry[] {
+  return [
+    {
+      type: "string",
+      name: "filter",
+      message: "Type search filter",
+      default: "",
+    },
+  ];
+}
+
 export function CallQuestion(type: CallType): Inquiry[] {
   return [
     {
@@ -13,10 +26,15 @@ export function CallQuestion(type: CallType): Inquiry[] {
   ];
 }
 
+function AppendSearchOption(arr: any[]): any[] {
+  arr.unshift(SEARCH_OPTION);
+  return arr;
+}
+
 export function ParamQuestions(call: string, callType: CallType): Inquiry[][] {
   const inquiries = [];
   for (const param of ParamsKeys(call, callType)) {
-    const { options, type, description, optional } = ParamFromKey(call, param, callType);
+    let { options, type, description, optional } = ParamFromKey(call, param, callType);
     let message = "";
     const optionalM = optional ? "[Optional] " : "";
     const paramM = `${optionalM}${param}`;
@@ -25,6 +43,9 @@ export function ParamQuestions(call: string, callType: CallType): Inquiry[][] {
         message = description
           ? `Select param value for ${paramM} - ${description}`
           : `Select param value for ${paramM}.`;
+        if (options && options.length > 5) {
+          options = AppendSearchOption(options);
+        }
         inquiries.push([
           {
             type: "rawlist",
